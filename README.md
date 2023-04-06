@@ -1,5 +1,8 @@
 # Stadvdb_MCO2
 
+# install packages:
+npm install
+
 # run project:
 npm start
 
