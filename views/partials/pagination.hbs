@@ -1,0 +1,23 @@
+{{!-- PAGINATION --}}
+<nav>
+    <ul class="pagination justify-content-center">
+        <li class="page-item {{#ifEquals pageNumberCurr 1}}disabled{{/ifEquals}}">
+            <button type="button" class="page-link" onclick="getQuerySearch(1)">First</button>
+        </li>
+
+        <li class="page-item {{#ifEquals pageNumberCurr 1}}disabled{{/ifEquals}}">
+            <button type="button" class="page-link" onclick="getQuerySearch({{pageNumberPrev}})">Previous</button>
+        </li>
+
+        <li class="page-item {{#ifEquals pageNumberCurr pageNumberLast}}disabled{{/ifEquals}}">
+            <button type="button" class="page-link" onclick="getQuerySearch({{pageNumberNext}})">Next</button>
+        </li>
+
+        <li class="page-item {{#ifEquals pageNumberCurr pageNumberLast}}disabled{{/ifEquals}}">
+            <button type="button" class="page-link" onclick="getQuerySearch({{pageNumberLast}})">Last</button>
+        </li>
+    </ul>
+</nav>
+
+<p id="query" class="d-none">{{query}}</p>
+<p id="node" class="d-none">{{node}}</p>
