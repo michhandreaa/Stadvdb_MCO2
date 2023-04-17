@@ -1,12 +1,8 @@
 <html>
 
 <head>
-    <title> IMDb Movies </title>
+    <title> IMDb Movie Record</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="/css/main.css">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 
@@ -16,68 +12,66 @@
     <script type="text/javascript" src="/js/validator.min.js"></script> --}}
     <script src="/js/handlebars.min.js"></script>
     <script type="text/javascript" src="/js/home.js"></script>
-    <link rel="icon" href="./images/Daco_1445791.png" type="image/x-icon">
 </head>
 
-<body style="background-color:#EE9595;" class="col-12 h-100 d-flex flex-column">
+<body class="col-12 h-100 d-flex flex-column">
     {{> navbar}}
     {{> successModal}}
     {{> failedModal}}
     {{> loadingModal}}
-    <div class="rounded-3 m-5 p-5 flex-fill bg-light d-flex flex-column justify-content-center">
+    <div class="rounded-3 m-5 p-5 flex-fill d-flex flex-column justify-content-center">
         {{!-- HEADER --}}
-        <div class="rounded-3 col-12 mb-5 d-flex flex-row">
-            <div class="rounded-start col-6 p-3 movie-title-quote d-flex flex-column justify-content-center align-items-center"
-                style="background-color:#FFCDA3;">
-                <span class="material-icons md-48">movie_filter</span>
-                <div id="title" class="col-6">
-                    <p class="h1 text-center">IMDb Movies</p>
-                </div>
-                <figure>
-                    <blockquote class="blockquote">
-                        <p class="text-center p-2 fst-italic fw-bolder">It's not the house that's haunted, it's your
-                            son.</p>
-                    </blockquote>
-                    <figcaption class=" text-center blockquote-footer">
-                        Elise Rainier in <cite title="Source Title">Insidious</cite>
-                    </figcaption>
-                </figure>
-            </div>
-
-            <div class="rounded-end col-6 movie-header">
-                <img src="/images/bg1.jpeg" class="rounded-end" alt="movies">
-            </div>
+        <div id="title" class="col-12">
+            <p class="h1 fw-bolder text-left">IMDb Movie Record</p>
+            <p class="text-left">
+                Welcome to the IMDB Movie Record Database! 
+                In here, you can add, update, delete, and search for a movie!
+                <br>
+                <br>
+                To <strong>SEARCH</strong> for a movie, click the link on the right in the navigation bar for further instructions!
+                <br>
+                To <strong>ADD</strong> a movie, click the 'Add a movie' button for further instructions!
+                <br>
+                To <strong>UPDATE</strong> a movie, click the 'Update' button of the movie you want to edit for further instructions!
+                <br>
+                To <strong>DELETE</strong> a movie, click the 'Delete' button of the movie you want to edit for further instructions!
+            </p>
         </div>
+
+        <br>
+        <br>
         {{!-- TABLE HEADER --}}
         <div class="col-12 d-flex flex-row">
-            <div id="title" class="col-4">
-                <p class="h1 fw-bolder text-left">IMDb Movies Record</p>
+            <div id="movies-num-rows" class="col-7 position-relative">
+                <p class="h5 col-12 pb-0 text-start position-absolute bottom-0 start-0">
+                    Showing {{resultlen}} records.
+                </p>
             </div>
-            <div id="movies-num-rows" class="col-6 position-relative">
-                <p class="h5 col-12 pb-0 fst-italic text-start position-absolute bottom-0 start-0">Showing {{resultlen}}
-                    row(s).</p>
-            </div>
-            <div id="insert-btn" class="col-2 d-flex position-relative mb-2">
+            <div id="insert-btn" class="col-5 d-flex position-relative mb-2">
                 <button
-                    class="btn col-12 btn-warning insertBtn position-absolute bottom-0 end-0 fw-bold border border-dark border-2"
-                    data-bs-toggle="modal" id="insert-movie-btn" data-bs-target="#modal-insert">Add a movie</button>
+                    class="btn col-4 insertBtn position-absolute bottom-0 end-0 fw-bold border border-dark"
+                    data-bs-toggle="modal" id="insert-movie-btn" data-bs-target="#modal-insert">
+                    Add a movie
+                </button>
+
                 {{!-- ADD A MOVIE(INSERT) MODAL --}}
                 <div class="modal fade modal-insert" id="modal-insert" tabindex="-1">
                     <form class="add-movie">
                         <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content">
-                                <div class="modal-header bg-warning border-dark">
-                                    <h5 class="modal-title" id="add-movie-modal-header"><strong>Add a
-                                            Movie</strong></h5>
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="add-movie-modal-header">
+                                        <strong>
+                                            Add Movie
+                                        </strong>
+                                    </h5>
                                 </div>
                                 <div class="modal-body p-4">
-                                    <div class="text-center fw-normal">Enter the movie's details (name,
-                                        year, and rank) before
-                                        clicking <strong>Add Movie</strong>. Discard entry by clicking the
-                                        <strong>Cancel</strong> button
+                                    <div class="text-center fw-normal">
+                                        Enter the Movie's title, year, and rank.
                                     </div>
                                     <div class="form-group my-3">
-                                        <label for="add-movie-name">Movie Name</label>
+                                        <label for="add-movie-name">Title</label>
                                         <input type="text" class="form-control" id="add-movie-name"
                                             name="add-movie-name">
                                     </div>
@@ -97,11 +91,11 @@
                                     </strong>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary me-auto"
+                                    <button type="button" class="btn me-auto"
                                         data-bs-dismiss="modal">Cancel</button>
-                                    <button type="submit" data-bs-dismiss="modal"
-                                        class="btn btn-warning add-movie-button" disabled>Add
-                                        Movie</button>
+                                    <button type="submit" data-bs-dismiss="modal" class="btn add-movie-button" disabled>
+                                        Add Movie
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -111,15 +105,15 @@
         </div>
 
         {{!-- TABLE --}}
-        <table class="table table-danger table-hover table-bordered table-striped border-dark border-2"
+        <table class="table table-hover table-bordered border-dark"
             id="movies-table">
-            <thead class="table-dark">
+            <thead>
                 <tr>
                     {{#each uniqueKeys}}
                     <th>{{this}}</th>
                     {{/each}}
-                    <th class="text-center">update</th>
-                    <th class="text-center">delete</th>
+                    <th class="text-center">Update</th>
+                    <th class="text-center">Delete</th>
                 </tr>
             </thead>
             <tbody>
@@ -130,9 +124,11 @@
                     {{/each}}
                     <th class="position-relative">
                         <button data-id={{id}} type="button"
-                            class="btn btn-primary updateBtn material-icons-outlined md-24 border-light border-2 position-absolute top-50 start-50 translate-middle"
+                            class="btn updateBtn md-24 border-dark position-absolute top-50 start-50 translate-middle"
                             data-bs-toggle="modal" id="{{id}}-update-movie-btn" data-bs-target="#modal-{{id}}-update">
-                            <span class="material-icons-outlined">edit_note</span>
+                            <span>
+                                Edit
+                            </span>
                         </button>
                         {{!-- UPDATE MODAL --}}
                         <div class="modal fade modal-update" id="modal-{{id}}-update" tabindex="-1">
@@ -141,23 +137,19 @@
                                     value="{{id}}" hidden>
                                 <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content">
-                                        <div class="modal-header bg-primary border-light">
-                                            <h5 class="modal-title" style="color: white;"
-                                                id="update-movie-modal-header">
-                                                <strong>Update this
-                                                    Movie</strong>
+                                        <div class="modal-header border-light">
+                                            <h5 class="modal-title" id="update-movie-modal-header">
+                                                <strong>Update Movie</strong>
                                             </h5>
                                         </div>
                                         <div class="modal-body p-4">
-                                            <div class="text-center fw-normal">Update any of the movie's details (name,
-                                                year, or rank) before
-                                                clicking <strong>Save Changes</strong>. All fields should be filled up.
-                                                Discard changes by clicking the
-                                                <strong>Cancel</strong> button.
+                                            <div class="text-center fw-normal">
+                                                Update movie's title, year, or rank. <br>
+                                                All fields should be filled up.
                                             </div>
 
                                             <div class="form-group my-3">
-                                                <label for="update-movie-name">Movie Name</label>
+                                                <label for="update-movie-name">Title</label>
                                                 <input type="text" class="form-control" id="update-movie-name-{{id}}"
                                                     name="update-movie-name" value="{{name}}">
                                                 <input type="text" class="form-control" id="movie-name-copy-{{id}}"
@@ -185,11 +177,12 @@
                                             </strong>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary me-auto"
+                                            <button type="button" class="btn me-auto"
                                                 data-bs-dismiss="modal">Cancel</button>
-                                            <button type="submit" data-bs-dismiss="modal" class="btn btn-primary"
-                                                id="update-movie-button-{{id}}" disabled>Save
-                                                Changes</button>
+                                            <button type="submit" data-bs-dismiss="modal" class="btn"
+                                                id="update-movie-button-{{id}}" disabled>
+                                                Save
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -198,30 +191,32 @@
                     </th>
                     <th class="text-center">
                         <button data-id={{id}}
-                            class="btn btn-danger deleteBtn material-icons-outlined md-24 border-light border-2"
+                            class="btn deleteBtn md-24 border-dark"
                             data-bs-toggle="modal" id="{{id}}-delete-movie-btn" data-bs-target="#modal-{{id}}-delete">
-                            <span class="material-icons-outlined">delete_forever</span>
+                            <span>Remove</span>
                         </button>
                         {{!-- CONFIRM DELETE MODAL --}}
                         <div class="modal fade modal-delete" id="modal-{{id}}-delete" tabindex="-1">
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
-                                    <div class="modal-header bg-danger border-light">
-                                        <h5 class="modal-title" style="color: white;" id="delete-movie-modal-header">
-                                            <strong>Delete this
-                                                Movie</strong>
+                                    <div class="modal-header border-light">
+                                        <h5 class="modal-title" id="delete-movie-modal-header">
+                                            <strong>
+                                                Delete Movie
+                                            </strong>
                                         </h5>
                                     </div>
                                     <div class="modal-body p-4">
-                                        <div class="fw-normal"> Are you sure you want to delete this movie?<br>This
-                                            action cannot be reversed.
+                                        <div class="fw-normal">
+                                            Are you sure you want to delete this movie?<br>
+                                            Note: action cannot be reversed.
                                         </div>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary me-auto" data-bs-toggle="modal"
+                                        <button type="button" class="btn me-auto" data-bs-toggle="modal"
                                             data-bs-target="#modal-{{id}}" data-bs-dismiss="modal">Back</button>
                                         <form>
-                                            <button type="submit" class="btn btn-danger" data-bs-dismiss="modal"
+                                            <button type="submit" class="btn" data-bs-dismiss="modal"
                                                 onclick="submitDeleteMovieForm({{id}},{{year}})">Delete</button>
                                         </form>
                                     </div>
