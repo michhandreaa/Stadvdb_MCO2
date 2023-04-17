@@ -3,8 +3,8 @@ const db = require('../models/db.js');
 const controller = {
     getIndex: async function (req, res) {
         let pageNumber = parseInt(req.query.page) ? parseInt(req.query.page) : 1;
-        let start = (pageNumber - 1) * 200;
-        let end = 200;
+        let start = (pageNumber - 1) * 50;
+        let end = 50;
         var arrLength = [];
 
         arrLength = await db.execute_query("SELECT COUNT(*) AS `count` FROM movies;");
@@ -28,7 +28,7 @@ const controller = {
         end = result.length;
         resultlen = (start + 1) + " to " + (start + end) + " out of " + length;
 
-        var lastPage = Math.ceil(length / 200)
+        var lastPage = Math.ceil(length / 50)
 
         var data = {
             uniqueKeys: uniqueKeys,
@@ -55,15 +55,15 @@ const controller = {
         result = await db.execute_query_debug(node, query);
         
         if (result) {
-            let start = (pageNumber - 1) * 200;
-        let end = (result.length < 200) ? result.length : 200;
+            let start = (pageNumber - 1) * 50;
+        let end = (result.length < 50) ? result.length : 50;
 
         var uniqueKeys = result.reduce(function (acc, obj) {
             return acc.concat(Object.keys(obj).filter(key => acc.indexOf(key) === -1));
         }, []);
 
         resultlen = (start + 1) + " to " + (start + end) + " out of " + result.length;
-        var lastPage = Math.ceil(result.length / 200)
+        var lastPage = Math.ceil(result.length / 50)
         result = result.slice(start, start + end);
 
         let data = {
