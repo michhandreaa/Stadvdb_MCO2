@@ -47,8 +47,8 @@ const query_funcs = {
         return `DELETE FROM movies WHERE id = ` + id + `;`;
     },
 
-    to_insert_query_log: function (name, year, rank, node_to, node_from) {
-        var query = `INSERT INTO log_table(type, node_to, node_from, done, name`;
+    to_insert_query_log: function (name, year, rank, dest_node, src_node) {
+        var query = `INSERT INTO log_table(type, dest_node, src_node, replicated, name`;
 
         if (year != '' && year != null) {
             query = query + ", year"
@@ -58,7 +58,7 @@ const query_funcs = {
             query = query + ', \`rank\`';
         }
 
-        query = query + ") VALUES ('INSERT', " + node_to + ', ' + node_from + `, false, '` + name + `'`;
+        query = query + ") VALUES ('INSERT', " + dest_node + ', ' + src_node + `, false, '` + name + `'`;
 
         if (year != '' && year != null) {
             query = query + ", " + year;
@@ -73,14 +73,14 @@ const query_funcs = {
         return query;
     },
 
-    to_insert_query_log_with_id: function (id, name, year, rank, node_to, node_from) {
-        var query = `INSERT INTO log_table(type, id, node_to, node_from, done, name, year`;
+    to_insert_query_log_with_id: function (id, name, year, rank, dest_node, src_node) {
+        var query = `INSERT INTO log_table(type, id, dest_node, src_node, replicated, name, year`;
 
         if (rank != '' && rank != null) {
             query = query + ', \`rank\`';
         }
 
-        query = query + ") VALUES ('INSERT', " + id + ', ' + node_to + ', ' + node_from + `, false, '` + name + `', ` + year;
+        query = query + ") VALUES ('INSERT', " + id + ', ' + dest_node + ', ' + src_node + `, false, '` + name + `', ` + year;
 
         if (rank != '' && rank != null) {
             query = query + ', ' + rank;
@@ -91,8 +91,8 @@ const query_funcs = {
         return query;
     },
 
-    to_update_query_log: function (id, name, year, rank, node_to, node_from) {
-        var query = `INSERT INTO log_table(type, node_to, node_from, done, id`;
+    to_update_query_log: function (id, name, year, rank, dest_node, src_node) {
+        var query = `INSERT INTO log_table(type, dest_node, src_node, replicated, id`;
 
         if (name != '' && name != null) {
             query = query + ', name';
@@ -106,7 +106,7 @@ const query_funcs = {
             query = query + ', \`rank\`';
         }
 
-        query = query + ") VALUES ('UPDATE', " + node_to + ", " + node_from + ", false, " + id;
+        query = query + ") VALUES ('UPDATE', " + dest_node + ", " + src_node + ", false, " + id;
 
         if (name != '' && name != null) {
             query = query + ', \'' + name + '\'';
@@ -126,10 +126,10 @@ const query_funcs = {
         return  query;
     },
 
-    to_update_query_id_log: function (new_id, old_id, node_to, node_from) {
-        var query = `INSERT INTO log_table(type, node_to, node_from, done, id, new_id`;
+    to_update_query_id_log: function (new_id, old_id, dest_node, src_node) {
+        var query = `INSERT INTO log_table(type, dest_node, src_node, replicated, id, new_id`;
         
-        query = query + ") VALUES ('UPDATE', " + node_to + ", " + node_from + ", false, " + old_id + ", " + new_id;
+        query = query + ") VALUES ('UPDATE', " + dest_node + ", " + src_node + ", false, " + old_id + ", " + new_id;
         
         query = query + ");";
         console.log(query);
@@ -137,13 +137,13 @@ const query_funcs = {
         return query;
     },
 
-    to_delete_query_log: function (id, node_to, node_from) {
-        return `INSERT INTO log_table(type, node_to, node_from, done, id) VALUES ('DELETE', `
-            + node_to + `, ` + node_from + `, false, ` + id + `);`;
+    to_delete_query_log: function (id, dest_node, src_node) {
+        return `INSERT INTO log_table(type, dest_node, src_node, replicated, id) VALUES ('DELETE', `
+            + dest_node + `, ` + src_node + `, false, ` + id + `);`;
     },
 
     to_finish_log: function (id) {
-        return `UPDATE log_table SET done=1 WHERE statement_id=` + id + `;`;
+        return `UPDATE log_table SET replicated=1 WHERE replicated_id=` + id + `;`;
     },
     
     to_retrieve_logs: function (node) {
@@ -166,7 +166,7 @@ const query_funcs = {
         if (second < 10) second = "0" + second;
         
         return `SELECT * FROM log_table
-                WHERE done=false AND node_to=`+ node + ` AND date < '` + year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second + `' 
+                WHERE replicated=false AND dest_node=`+ node + ` AND date < '` + year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second + `' 
                 ORDER BY date ASC;`
     },
 

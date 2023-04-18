@@ -5,20 +5,20 @@ const nodes = require('../models/nodes.js');
 const queryHelper = require('../helpers/queryHelper.js');
 
 const transactions_funcs = {
-    insert_transaction_with_log: async function (node_to, query, name, rank, year, node_from) {
+    insert_transaction_with_log: async function (dest_node, query, name, rank, year, src_node) {
         try {
-            let conn = await nodes.connect_node(node_to);
+            let conn = await nodes.connect_node(dest_node);
             if (conn)
                 try {
                     await conn.beginTransaction();
 
                     await conn.query(`SET @@session.time_zone = "+08:00";`);
                     var result = await conn.query(query);
-                    console.log('Executed ' + query + ' at Node ' + node_to);
+                    console.log('Executed ' + query + ' at Node ' + dest_node);
 
-                    var log = queryHelper.to_insert_query_log_with_id(result[0].insertId, name, year, rank, node_from, node_to);
+                    var log = queryHelper.to_insert_query_log_with_id(result[0].insertId, name, year, rank, src_node, dest_node);
                     var resultlog = await conn.query(log);
-                    console.log('Created ' + log + ' at Node ' + node_to);
+                    console.log('Created ' + log + ' at Node ' + dest_node);
 
                     await conn.commit();
                     await conn.release();
@@ -27,7 +27,7 @@ const transactions_funcs = {
                 catch (error) {
                     console.log(error)
                     console.log('Rolled back the data.');
-                    conn.rollback(node_to);
+                    conn.rollback(dest_node);
                     conn.release();
                     return error;
                 }
@@ -42,23 +42,23 @@ const transactions_funcs = {
         }
     },
 
-    insert_update_transaction_with_log: async function (node_to, query, update, node_from, old_id) {
+    insert_update_transaction_with_log: async function (dest_node, query, update, src_node, old_id) {
         try {
-            let conn = await nodes.connect_node(node_to);
+            let conn = await nodes.connect_node(dest_node);
             if (conn)
                 try {
                     await conn.beginTransaction();
 
                     await conn.query(`SET @@session.time_zone = "+08:00";`);
                     var result = await conn.query(query);
-                    console.log('Executed ' + query + ' at Node ' + node_to);
+                    console.log('Executed ' + query + ' at Node ' + dest_node);
 
-                    var log = queryHelper.to_update_query_id_log(result[0].insertId, old_id, node_from, node_to);
+                    var log = queryHelper.to_update_query_id_log(result[0].insertId, old_id, src_node, dest_node);
                     console.log(log)
                     var resultlog = await conn.query(log);
-                    console.log('Created ' + log + ' at Node ' + node_to);
+                    console.log('Created ' + log + ' at Node ' + dest_node);
 
-                    var resultupdate = await nodes.query_node(node_from, update);
+                    var resultupdate = await nodes.query_node(src_node, update);
                     console.log('Executed ' + update);
 
                     await conn.commit();
@@ -68,7 +68,7 @@ const transactions_funcs = {
                 catch (error) {
                     console.log(error)
                     console.log('Rolled back the data.');
-                    conn.rollback(node_to);
+                    conn.rollback(dest_node);
                     conn.release();
                     return error;
                 }
@@ -83,9 +83,9 @@ const transactions_funcs = {
         }
     },
 
-    insert_update_transaction: async function (node_to, query, update, node_from, type, id) {
+    insert_update_transaction: async function (dest_node, query, update, src_node, type, id) {
         try {
-            let conn = await nodes.connect_node(node_to);
+            let conn = await nodes.connect_node(dest_node);
             if (conn)
                 try {
                     await conn.beginTransaction();
@@ -95,9 +95,9 @@ const transactions_funcs = {
 
                     await conn.query(`SET @@session.time_zone = "+08:00";`);
                     var result = await conn.query(query);
-                    console.log('Executed ' + query + ' at Node ' + node_to);
+                    console.log('Executed ' + query + ' at Node ' + dest_node);
 
-                    var resultupdate = await nodes.query_node(node_from, update);
+                    var resultupdate = await nodes.query_node(src_node, update);
                     console.log('Executed ' + update);
 
                     await conn.commit();
@@ -107,7 +107,7 @@ const transactions_funcs = {
                 catch (error) {
                     console.log(error)
                     console.log('Rolled back the data.');
-                    conn.rollback(node_to);
+                    conn.rollback(dest_node);
                     conn.release();
                     return error;
                 }
@@ -122,9 +122,9 @@ const transactions_funcs = {
         }
     },
 
-    make_2transaction: async function (node_to, query, update, type, id, node_from) {
+    make_2transaction: async function (dest_node, query, update, type, id, src_node) {
         try {
-            let conn = await nodes.connect_node(node_to);
+            let conn = await nodes.connect_node(dest_node);
             if (conn)
                 try {
                     await conn.beginTransaction();
@@ -134,9 +134,9 @@ const transactions_funcs = {
 
                     await conn.query(`SET @@session.time_zone = "+08:00";`);
                     var result = await conn.query(query);
-                    console.log('Executed ' + query + ' at Node ' + node_to);
-                    var resultupdate = await nodes.query_node(node_from, update);
-                    console.log('Executed ' + update + ' at Node ' + node_from);
+                    console.log('Executed ' + query + ' at Node ' + dest_node);
+                    var resultupdate = await nodes.query_node(src_node, update);
+                    console.log('Executed ' + update + ' at Node ' + src_node);
 
                     await conn.commit();
                     await conn.release();
@@ -145,7 +145,7 @@ const transactions_funcs = {
                 catch (error) {
                     console.log(error)
                     console.log('Rolled back the data.');
-                    conn.rollback(node_to);
+                    conn.rollback(dest_node);
                     conn.release();
                     return error;
                 }

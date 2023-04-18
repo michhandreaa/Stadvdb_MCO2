@@ -25,22 +25,22 @@ const sync_funcs = {
                     let query;
                     switch (logs[i].type) {
                         case 'INSERT':
-                            if (await ping_node(logs[i].node_to)) {
+                            if (await ping_node(logs[i].dest_node)) {
                                 query = queryHelper.to_insert_query(logs[i].name, logs[i].rank, logs[i].year);
-                                var update = queryHelper.to_finish_log(logs[i].statement_id);
-                                var result = await transaction.insert_update_transaction_with_log(logs[i].node_to, query, update, logs[i].node_from, logs[i].id);
+                                var update = queryHelper.to_finish_log(logs[i].replicated_id);
+                                var result = await transaction.insert_update_transaction_with_log(logs[i].dest_node, query, update, logs[i].src_node, logs[i].id);
                                 return (result instanceof Error) ? false : true;
                             }
                         case 'UPDATE':
                             query = queryHelper.to_update_query(logs[i].id, logs[i].name, logs[i].rank, logs[i].year);
-                            var update = queryHelper.to_finish_log(logs[i].statement_id);
-                            var result = await transaction.make_2transaction(logs[i].node_to, query, update, 'UPDATE', logs[i].id, logs[i].node_from);
+                            var update = queryHelper.to_finish_log(logs[i].replicated_id);
+                            var result = await transaction.make_2transaction(logs[i].dest_node, query, update, 'UPDATE', logs[i].id, logs[i].src_node);
                             return (result instanceof Error) ? false : true;
 
                         case 'DELETE':
                             query = queryHelper.to_delete_query(logs[i].id);
-                            var update = queryHelper.to_finish_log(logs[i].statement_id);
-                            var result = await transaction.make_2transaction(logs[i].node_to, query, update, 'DELETE', logs[i].id, logs[i].node_from);
+                            var update = queryHelper.to_finish_log(logs[i].replicated_id);
+                            var result = await transaction.make_2transaction(logs[i].dest_node, query, update, 'DELETE', logs[i].id, logs[i].src_node);
                             return (result instanceof Error) ? false : true;
                     }
                     console.log('Synced to Node 1');
@@ -72,7 +72,7 @@ const sync_funcs = {
             
             if (logs) {
                 for (let i = 0; i < logs.length; i++) {
-                    if (await ping_node(logs[i].node_to)) {
+                    if (await ping_node(logs[i].dest_node)) {
                         let query;
                         switch (logs[i].type) {
                             case 'INSERT':
@@ -94,7 +94,7 @@ const sync_funcs = {
                             case 'DELETE':
                                 query = queryHelper.to_delete_query(logs[i].id); break;
                         }
-                        var result = await transaction.insert_update_transaction(logs[i].node_to, query, queryHelper.to_finish_log(logs[i].statement_id), logs[i].node_from, logs[i].type, logs[i].id);
+                        var result = await transaction.insert_update_transaction(logs[i].dest_node, query, queryHelper.to_finish_log(logs[i].replicated_id), logs[i].src_node, logs[i].type, logs[i].id);
                         console.log('Synced to Node ' + node);
                         return (result instanceof Error) ? false : true;
                     }
